@@ -25,7 +25,6 @@ def send_mail(str):
 	smtpObj.sendmail(sender, receivers, message.as_string())
 
 fr=open('./latest_status.txt', 'r')
-
 url = "https://***.execute-api.us-east-1.amazonaws.com/tracker/UUID"
 
 payload={}
@@ -36,15 +35,24 @@ response = requests.request("GET", url, headers=headers, data=payload)
 json_result = json.loads(response.text)
 
 i=-1
+j=0
 nowdate=fr.read()
 fr.close()
 
 REArray=json_result["ReviewEvents"]
 REArray.sort(key=lambda x:x["Date"])
+str_table=""
+
+try:
+	while REArray[j]:
+		str_table+=str(REArray[j]["Id"])+"\t"+datetime.datetime.fromtimestamp(REArray[j]["Date"],pytz.timezone("Asia/Shanghai")).strftime('%Y-%m-%d %H:%M:%S')+"\t"+REArray[j]["Event"]+"\n"
+		j+=1
+except:
+	pass
 
 try:
 	while REArray[i]["Date"]>int(nowdate):
-		send_mail("An updated status detected on Elsevier at "+datetime.datetime.fromtimestamp(REArray[i]["Date"],pytz.timezone("Asia/Shanghai")).strftime('%Y-%m-%d %H:%M:%S')+" UTC +8. Event Description: "+REArray[i]["Event"])
+		send_mail("An updated status detected on Elsevier at "+datetime.datetime.fromtimestamp(REArray[i]["Date"],pytz.timezone("Asia/Shanghai")).strftime('%Y-%m-%d %H:%M:%S')+" UTC+0800."+"\r\n"+"Event Description: "+REArray[i]["Event"]+".\r\n"+"Event ID\t\tTime\t\t\t\tEvent Description"+"\n"+str_table)
 		i-=1
 except:
 	pass
