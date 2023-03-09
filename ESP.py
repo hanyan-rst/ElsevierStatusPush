@@ -45,14 +45,14 @@ str_table=""
 
 try:
 	while REArray[j]:
-		str_table+=str(REArray[j]["Id"])+"\t"+datetime.datetime.fromtimestamp(REArray[j]["Date"],pytz.timezone("Asia/Shanghai")).strftime('%Y-%m-%d %H:%M:%S')+"\t"+REArray[j]["Event"]+"\n"
+		str_table+=str(REArray[j]["Id"])+"\t"+datetime.datetime.fromtimestamp(REArray[j]["Date"],pytz.timezone("Asia/Shanghai")).strftime('%Y-%m-%d %H:%M:%S')+"\t"+REArray[j]["Event"]+"\t\t\t"+str(REArray[j]["Revision"])+"\n"
 		j+=1
 except:
 	pass
 
 try:
 	while REArray[i]["Date"]>int(nowdate):
-		send_mail("An updated status detected on Elsevier at "+datetime.datetime.fromtimestamp(REArray[i]["Date"],pytz.timezone("Asia/Shanghai")).strftime('%Y-%m-%d %H:%M:%S')+" UTC+0800."+"\r\n"+"Event Description: "+REArray[i]["Event"]+".\r\n"+"Event ID\t\tTime\t\t\t\tEvent Description"+"\n"+str_table)
+		send_mail("An updated status detected on Elsevier at "+datetime.datetime.fromtimestamp(REArray[i]["Date"],pytz.timezone("Asia/Shanghai")).strftime('%Y-%m-%d %H:%M:%S')+" UTC+0800."+"\r\n"+"Event Description: "+REArray[i]["Event"]+".\r\n"+"View detailed information from API at https://tnlkuelk67.execute-api.us-east-1.amazonaws.com/tracker/4b9b6857-734a-493c-a6e4-396c691b418e and Author Hub at https://track.authorhub.elsevier.com/?uuid=4b9b6857-734a-493c-a6e4-396c691b418e.\r\n\r\n"+"Event ID\t\tTime\t\t\t\tEvent Description\t\t\tRevision"+"\n"+str_table)
 		i-=1
 except:
 	pass
